@@ -4,6 +4,11 @@ const mongoose = require('mongoose');
 // Allows us to control app's Cross Origin Resource Sharing Settings
 const cors = require('cors');
 
+// Allow access to routes defined within our application
+const userRoutes = require('./routes/userRoutes');
+
+
+
 const app = express();
 
 // Connect to our MongoDB database
@@ -19,6 +24,10 @@ mongoose.connection.once('open', () => console.log('Now connected to MongoDB Atl
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
+
+// "/users" to be included for all user routes defined in the "userRoutes" file
+// "http://localhost:4000/users"
+app.use('/users', userRoutes);
 
 
 // Will use the define port number for the application whenever an environment variable is available OR will use port 4000 if none is defined

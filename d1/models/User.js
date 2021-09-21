@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
 		type: String,
 		required: [true, "Last name is required"]
 	},
-	e-mail: {
+	email: {
 		type: String,
 		required: [true, "Email address is required"]
 	},
@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
 	},
 	isAdmin: {
 		type: Boolean,
-		default: true
+		default: false
 	},
 	mobileNo: {
 		type: String,
@@ -30,11 +30,11 @@ const userSchema = new mongoose.Schema({
 		{
 			courseId: {
 				type: String,
-				required: [true, "CourseId rqeuired"]
+				required: [true, "CourseId is required"]
 			},
 			enrolledOn: {
 				type: Date,
-				default: new Date();
+				default: new Date()
 			},
 			status: {
 				type: String,
