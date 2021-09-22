@@ -94,3 +94,36 @@ module.exports.loginUser = (reqBody) => {
 		}
 	})
 }
+
+/*s33 activity*/
+// #2. Create a getProfile controller method for retrieving the details of the user:
+	// a. Find the document in the database using the user's ID
+	// b. Reassign the password of the returned document to an empty string
+	// c. Return the result back to the frontend
+
+module.exports.getProfile = (reqBody) => {
+	return User.findById( {_id: reqBody._id} ).then(resultProfile => {
+		if (resultProfile == null) {
+			return false;
+		}
+
+
+		else {
+			resultProfile.password = "";
+			return resultProfile;
+		}
+	})
+}
+
+module.exports.getProfileGET = (reqBody) => {
+	return User.findById( {_id: reqBody._id} ).then((resultProfile, err) => {
+		if (err) {
+			console.log(err);
+			return false;
+		}
+		else {
+			resultProfile.password = "";
+			return resultProfile;
+		}
+	})
+}
