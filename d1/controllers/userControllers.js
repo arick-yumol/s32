@@ -102,12 +102,10 @@ module.exports.loginUser = (reqBody) => {
 	// c. Return the result back to the frontend
 
 module.exports.getProfile = (reqBody) => {
-	return User.findById( {_id: reqBody._id} ).then(resultProfile => {
+	return User.findById(reqBody.userId).then(resultProfile => {
 		if (resultProfile == null) {
 			return false;
 		}
-
-
 		else {
 			resultProfile.password = "";
 			return resultProfile;
@@ -115,7 +113,7 @@ module.exports.getProfile = (reqBody) => {
 	})
 }
 
-module.exports.getProfileGET = (reqBody) => {
+/*module.exports.getProfileGET = (reqBody) => {
 	return User.findById( {_id: reqBody._id} ).then((resultProfile, err) => {
 		if (err) {
 			console.log(err);
@@ -126,4 +124,13 @@ module.exports.getProfileGET = (reqBody) => {
 			return resultProfile;
 		}
 	})
-}
+}*/
+
+
+/*// s33 activity solution by Ma'am Judy Lyn Medalla
+module.exports.getProfile = (data) => {
+	return User.findById( data.userId ).then(result => {
+		result.password = "";	// result.password = undefined;
+		return result;
+	})
+}*/

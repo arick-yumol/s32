@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userControllers')
-
+const auth = require('../auth');
 
 // Route for checking if the user's e-mail already exists in the database
 router.post('/checkEmail', (req, res) => {
@@ -28,9 +28,19 @@ router.post('/details', (req, res) => {
 	userController.getProfile(req.body).then(result => res.send(result));
 })
 
-router.get('/details', (req, res) => {
+/*router.get('/details', (req, res) => {
 	userController.getProfileGET(req.body).then(result => res.send(result));
-})
+})*/
 
+/*// s33 activity solution by Ma'am Judy Lyn Medalla
+router.post('/details', (req, res) => {
+	userController.getProfile( {userId: req.body.id} ).then(result => res.send(result));	// when using req.body.id, no need to specifiy in controllers
+})*/
+
+router.get('/details', auth.verify, (req, res) => {
+	// Uses the .decode() method defined in the 'auth.js' file to retrieve the user information from the token passing the "token" from the request header as an argument.
+	const userData = auth.decode(req.headers.authorization)
+	userController.getProfile( {userId: userData.id} ).then(result => res.send(result));
+})
 
 module.exports = router;
