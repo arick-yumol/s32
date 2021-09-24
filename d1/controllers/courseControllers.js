@@ -68,90 +68,56 @@ module.exports.getSpecificCourse = (courseId) => {
 }
 
 
-/*// Sir Noel's code + modification by Ma'am Judy Lyn Medalla
-module.exports.specificCourse = (reqParams) => {
-	return Course.findById(reqParams.courseId).then(result => {	// reqParams.courseId is set because it was not specified in the routes
-		return result;
+// Ma'am Judy Lyn Medalla's update course code
+module.exports.updateCourse = (reqParams, reqBody) => {
+	let updatedCourse = {
+		name: reqBody.name,
+		description: reqBody.description,
+		price: reqBody.price
+	};
+
+	// findByIAndUpdate(ID, updatesToBeApplied)
+	return Course.findByIdAndUpdate(reqParams.courseId, updatedCourse).then((course, error) => {
+		// Course is not updated
+		if (error) {
+			return false;
+		}
+		else {
+			return true;
+		}
 	})
-}*/
-
-// Update a course
-/*module.exports.updateCourse = (reqParams) => {
-	if (reqParams.isAdmin) {
-		return Course.findById( {name: reqParams.name} ).then((result, error) => {
-			if (error) {
-				console.log(error);
-				return false;
-			}
-
-			result.name = reqParams.name;
-			result.description = reqParams.description;
-			result.price = reqParams.price;
-
-			return result.save().then((updatedCourseName, err) => {
-				if (err) {
-					return false;
-				}
-				else {
-					return updatedCourseName;
-				}
-			})
-		})
-	}
-	else {
-		return false;
-	}
-}*/
-
-
-module.exports.updateCourse = (reqId) => {
-	if (reqId.isAdmin) {
-		return Course.findByIdandUpdate( {id: reqId.id} , reqId.body).then((result, error) => {
-			if (error) {
-				console.log(error);
-				return false;
-			}
-
-			result.name = reqId.name,
-			result.description = reqId.description,
-			result.price = reqId.price;
-
-			return result.save().then((updatedCourseName, err) => {
-				if (err) {
-					return false;
-				}
-				else {
-					return updatedCourseName;
-				}
-			})
-		})
-	}
-	else {
-		return false;
-	}
 }
 
-
-/*// Sir Kevin Zerda's update course code
-module.exports.updateCourse = (courseId,newUpdate,data) => {
-
-	if (data.isAdmin) {
-		return Course.findById(courseId).then((result,error)=>{
-			if (error) {
-				return false;
-			} 
-			else {
-				result.price = newUpdate.price;
-				return result.save().then((updatedCourse, err)=>{
-					if (err) {
-						return false;
-					} else {
-						return updatedCourse;
-					}
-				})
-			}
-		})
-
-	}
+// ternary operator(ES6 updates)
+/*if (error) {
+	return false
 }
+else {
+	return true
+}
+
+(error) ? false : true*/
+
+
+/* Business Logic for Archive
+Steps:
+1. Check if admin (routes)
+2. Create a variable where the isActive will change into false
+3. So we can use findByIdAndUpdate(id, updatedVariable). Then error handling, if course is not archive, return false. If the course is archived successfully, return true
 */
+
+// Archive a Course
+module.exports.archiveCourse = (reqParams, reqBody) => {	// turns current 'isActive: true' courses into 'isActive: false' courses
+	let updateCourseStatus = {
+		isActive: false
+	};
+
+	return Course.findByIdAndUpdate(reqParams.courseId, updateCourseStatus).then((course, error) => {
+		if (error) {
+			return false;
+		}
+		else {
+			return true;
+		}
+	})
+}

@@ -43,4 +43,18 @@ router.get('/details', auth.verify, (req, res) => {
 	userController.getProfile( {userId: userData.id} ).then(result => res.send(result));
 })
 
+// Route to enroll a user to a course
+router.post('/enroll', (req, res) => {
+	let data = {
+		// User ID will be retrieved from the request header
+		userId : auth.decode(req.headers.authorization).id,
+		// Course ID will be retrieved from the request body
+		courseId : req.body.courseId
+	}
+	console.log(data)
+	userController.enroll(data).then(result => res.send(result))
+})
+
+
+
 module.exports = router;

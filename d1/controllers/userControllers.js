@@ -1,4 +1,5 @@
 const User = require("../models/User");	// ../models/User.js
+const Course = require("../models/Course");	// ../models/Course.js
 const bcrypt = require('bcrypt');		// npm install bcrypt --save (npm install --save bcyptjs: alternative to npm install bcrypt)
 const auth = require('../auth');
 
@@ -6,7 +7,7 @@ const auth = require('../auth');
 
 /*
 Steps:
-1. Use mongoode .find() method to find duplicate e-mails
+1. Use mongoose .find() method to find duplicate e-mails
 2. Use the .then() method to send a response back to the client based on the result of the .find() method (e-mail already exists/not existing)
 
 */
@@ -134,3 +135,60 @@ module.exports.getProfile = (data) => {
 		return result;
 	})
 }*/
+
+
+/*// Enroll a user to a class/course
+Steps:
+1. Find the document in the database using the user's ID
+2. Add the course ID to the user's enrollment array, vice versa with the enrollees array
+3. Save the data in the Database
+4. Find the document in the database using the course's ID
+5. Add the User ID to the course's enrollees array
+6. Save the data in the database
+7. Error handling: if successful, return true; else, return false
+*/
+
+// Async-await will be used in enrolling the user because we will need to update 2 separate documents when enrolling a user.
+
+module.exports.enroll = async (data) => {
+	// Creates an "isUserUpdated" variable and returns true upon successful update, otherwise, false
+	// Using the "await" keyword will allow the enroll method to continue updating the user before returning a response back to the client
+	let isUserUpdated = await User.findById(data.userId).then(user => {	// step 1
+		// Add the courseId in the user's enrollments array
+		user.enrollments.push( { courseId: data.courseId } )	// step 2
+
+		// Saves the updated user information in the database.
+		return user.save().then((user, error) => {	// step 3
+			if (error) {
+				return false;
+			}
+			else {
+				return true;
+			}
+		})	// the "isUserUpdated" variable tells us if the course was successfully added to the user
+	})
+
+	let isCourseUpdated = await Course.findById(data.courseId).then(course => {	// step 4
+		// Add the userId in the course's enrollees array
+		course.enrollees.push( { userId: data.userId } );	// step 5
+
+		return course.save().then((course, error) => {	// step 6
+			if (error) {
+				return false;
+			}
+			else {
+				return true;
+			}
+		})	// the "isCourseUpdated" variable tells us if the user was successfully saved to the course
+	})
+
+	// Condition that will check if the user and course documents
+	// step 7
+	if (isUserUpdated && isCourseUpdated) {
+		return true;
+	}
+	else {
+		// if user enrollment failed
+		return false;
+	}
+}

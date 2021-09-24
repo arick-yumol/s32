@@ -34,29 +34,35 @@ router.get('/:id', (req, res) => {
 	courseController.getSpecificCourse(req.params.id).then(result => res.send(result));
 })
 
-/*// Sir Noel's code + modification by Ma'am Judy Lyn Medalla
-router.get("/:courseId", (req,res) => {	// wildcards can be rename from /:id to whatever you want
-	courseController.specificCourse(req.params).then(result => res.send(result));	//when not specific when using req.params, the parameters in the controller must be specified
-})*/
 
-// Route to update a course
-router.put('/:id', auth.verify, (req, res) => {
-	const data = {
-		isAdmin: auth.decode(req.headers.authorization).isAdmin
-	}
-	courseController.updateCourse(req.params, req.body, data).then(result => res.send(result));
-})
-
-/*// Sir Kevin Zerda's update course code
-router.put('/:courseId', auth.verify, (req,res) => {
-
+// Ma'am Judy Lyn Medalla's update course code
+router.put('/:courseId', auth.verify, (req, res) => {
 	const data = {
 		isAdmin: auth.decode(req.headers.authorization).isAdmin
 	}
 
-
-	courseController.updateCourse(req.params.courseId, req.body, data).then(result => res.send(result))
+	if (data.isAdmin) {
+		courseController.updateCourse(req.params, req.body).then(result => res.send(result))
+	}
+	else {
+		res.send(false)
+	}
 })
-*/
+
+
+// 'archive/soft delete' a course
+
+router.put('/:courseId/archive', auth.verify, (req, res) => {	// turns current 'isActive: true' courses into 'isActive: false' courses
+	const data = {
+		isAdmin: auth.decode(req.headers.authorization).isAdmin
+	}
+
+	if (data.isAdmin) {
+		courseController.archiveCourse(req.params, req.body).then(result => res.send(result))
+	}
+	else {
+		res.send(false)
+	}
+})
 
 module.exports = router;
