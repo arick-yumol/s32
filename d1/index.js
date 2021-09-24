@@ -6,7 +6,7 @@ const cors = require('cors');
 
 // Allow access to routes defined within our application
 const userRoutes = require('./routes/userRoutes');
-
+const courseRoutes = require('./routes/courseRoutes');
 
 
 const app = express();
@@ -26,9 +26,9 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
 // "/users" to be included for all user routes defined in the "userRoutes" file
-// "http://localhost:4000/users"
-app.use('/users', userRoutes);
 
+app.use('/users', userRoutes);	// "http://localhost:4000/users"
+app.use('/courses', courseRoutes);	// "http://localhost:4000/courses"
 
 // Will use the define port number for the application whenever an environment variable is available OR will use port 4000 if none is defined
 // This syntax will allow flexibility when using the application locally or as a hosted application

@@ -24,17 +24,17 @@ const courseSchema = new mongoose.Schema({
 		type: Date,
 		// The "new Date()" expression instantiates a new "date" that stores the current date and time whenever a course is created in our database
 		default: new Date()
-	}
+	},
 	// We will be applying the concept of referencing data to establish a relationship between our courses and user
 	enrollees: [
 		{
 			userId: {
 				type: String,
 				required: [true, 'UserId required']
-			}
+			},
 			enrolledOn: {
 				type: Date,
-				default: new Date();
+				default: new Date()
 			}
 		}
 	]
